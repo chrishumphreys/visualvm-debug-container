@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: java-debug-pod
+spec:
+  shareProcessNamespace: true
+  containers:
+  - name: app
+    image: docker.io/library/openjdk:17-jdk-slim
+    # Just a dummy java process keeping the container alive
+    command: ["java", "-Xmx256m", "-jar", "app.jar"]
+    # In a real scenario, this would be your actual application
+    # For this demo, we can just run a sleep or a simple java command if we had a jar.
+    # Let's run a simple loop to simulate a long running java process.
+    args: ["-version"] 
+    # Overriding to a shell loop for demonstration if no jar exists
+    command: ["/bin/bash", "-c", "while true; do echo 'App running'; sleep 10; done"]
+
+  - name: visualvm-sidecar
+    image: visualvm-web:latest
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 6080
+    securityContext:
+      # Often needed to see other processes, sometimes requires SYS_PTRACE capability
+      # depending on the cluster configuration, but shareProcessNamespace usually handles visibility.
+      capabilities:
+        add:
+        - SYS_PTRACE
