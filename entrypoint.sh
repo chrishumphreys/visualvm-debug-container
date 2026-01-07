@@ -20,4 +20,4 @@ websockify --web /usr/share/novnc/ 6080 localhost:5900 &
 echo "Starting VisualVM..."
 # VisualVM needs to find the JDK. Usually works out of the box with the package,
 # but passing --jdkhome ensures it picks the right one if multiple are present.
-visualvm --jdkhome /usr/lib/jvm/java-17-openjdk-amd64
+/tools/visualvm_22/bin/visualvm --jdkhome /usr/lib/jvm/java-17-openjdk-amd64
